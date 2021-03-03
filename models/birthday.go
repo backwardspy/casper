@@ -5,7 +5,15 @@ import "gorm.io/gorm"
 // MeatballDay represents a user's birth day and month
 type MeatballDay struct {
 	gorm.Model
-	UserID string `gorm:"uniqueIndex"`
-	Month  uint
-	Day    uint
+	GuildID string `gorm:"index:idx_unique_guild_member,unique"`
+	UserID  string `gorm:"index:idx_unique_guild_member,unique"`
+	Month   uint
+	Day     uint
+}
+
+// MeatballRole maps guild IDs to their respective meatball day roles
+type MeatballRole struct {
+	gorm.Model
+	GuildID string `gorm:"uniqueIndex"`
+	RoleID  string
 }
