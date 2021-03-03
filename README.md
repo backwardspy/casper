@@ -1,5 +1,7 @@
 # casper
 
+![Docker Automated build](https://img.shields.io/docker/automated/backwardspy/casper?style=for-the-badge) ![Docker Build Status](https://img.shields.io/docker/build/backwardspy/casper?style=for-the-badge)
+
 he lives again by popular demand.
 
 ## usage
