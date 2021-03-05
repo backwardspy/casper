@@ -16,8 +16,12 @@ omit `-guild` if you want the commands to be registered globally.
 
 ### meatball day
 
-`/meatball [USER]`
-looks up a user's meatball day in the meatball day database
+`/meatball [USER]` looks up a user's meatball day in the meatball day database
 
-`/meatball-save MONTH-DAY`
-save your meatball day into the meatball day database
+`/meatball-save MONTH-DAY` save your meatball day into the meatball day database
+
+`/meatball-forget` remove your meatball day from the database
+
+`/meatball-role ROLE` set the role to assign on meatball day **\[admin only\]**
+
+`/meatball-chan CHANNEL` set the channel to use for announcements **\[admin only\]**
