@@ -1,0 +1,5 @@
+todo list
+* DONE announce when it's a user's meatball day
+* DONE recheck meatball roles when a new meatball day is added
+* DONE limit meatball-save command usage frequency
+* DONE add meatball-forget command
