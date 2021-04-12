@@ -24,6 +24,8 @@ omit `-dbPath` to use `./casper.db`.
 
 `/meatball-forget` remove your meatball day from the database.
 
+`/meatball-next` get the next occurring meatball day.
+
 `/meatball-role ROLE` set the role to assign on meatball day. **\[admin only\]**
 
 `/meatball-chan CHANNEL` set the channel to use for announcements. **\[admin only\]**
