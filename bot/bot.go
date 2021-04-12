@@ -65,6 +65,9 @@ var botCommands = []*discordgo.ApplicationCommand{
 				Required:    true,
 			},
 		},
+	}, {
+		Name:        "meatball-next",
+		Description: "Gets the next occurring meatball day.",
 	},
 }
 
@@ -137,6 +140,7 @@ func New(
 		"meatball-forget": bot.MeatballForget,
 		"meatball-role":   bot.MeatballRole,
 		"meatball-chan":   bot.MeatballChannel,
+		"meatball-next":   bot.MeatballNext,
 	}
 
 	bot.initSession(token, db)

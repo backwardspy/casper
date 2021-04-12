@@ -3,6 +3,7 @@ package dal
 import (
 	"casper/models"
 	"log"
+	"time"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -13,7 +14,13 @@ import (
 func InitDB(dbPath string) *gorm.DB {
 	db, err := gorm.Open(
 		sqlite.Open(dbPath),
-		&gorm.Config{},
+		&gorm.Config{
+			// Logger: logger.New(log.New(os.Stdout, "\r\n", log.LstdFlags), logger.Config{
+			// 	SlowThreshold: 200 * time.Millisecond,
+			// 	LogLevel:      logger.Info,
+			// 	Colorful:      true,
+			// }),
+		},
 	)
 	if err != nil {
 		log.Fatalf("Failed to connect to DB: %v", err)
@@ -91,4 +98,61 @@ func GetMeatballChannel(
 	}
 
 	return &meatballChannel, nil
+}
+
+// GetNextMeatballDay gets the next occurring meatball day.
+func GetNextMeatballDay(
+	guildID string,
+	db *gorm.DB,
+) (*models.MeatballDay, error) {
+	var meatballDays []models.MeatballDay
+	err := db.Where(
+		&models.MeatballDay{
+			GuildID: guildID,
+		},
+	).Order(
+		clause.OrderByColumn{
+			Column: clause.Column{
+				Name: "month",
+			},
+		},
+	).Order(
+		clause.OrderByColumn{
+			Column: clause.Column{
+				Name: "day",
+			},
+		},
+	).Find(&meatballDays).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len(meatballDays) == 0 {
+		return nil, nil
+	}
+
+	return findNextMeatballDay(meatballDays), nil
+}
+
+// Finds the next occurring meatball day.
+func findNextMeatballDay(meatballDays []models.MeatballDay) *models.MeatballDay {
+	now := time.Now()
+	var next *models.MeatballDay
+
+	for _, meatballDay := range meatballDays {
+		if time.Month(meatballDay.Month) > now.Month() {
+			next = &meatballDay
+			break
+		} else if time.Month(meatballDay.Month) == now.Month() && int(meatballDay.Day) >= now.Day() {
+			next = &meatballDay
+			break
+		}
+	}
+
+	if next == nil {
+		next = &meatballDays[0]
+	}
+
+	return next
 }

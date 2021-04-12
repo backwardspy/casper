@@ -260,6 +260,39 @@ func (bot *Bot) MeatballChannel(
 	discordutils.SendFollowup(reply, i.Interaction, bot.session)
 }
 
+// MeatballNext finds the next occurring meatball day.
+func (bot *Bot) MeatballNext(
+	i *discordgo.InteractionCreate,
+	db *gorm.DB,
+) {
+	discordutils.AckInteraction(i.Interaction, bot.session)
+	nextMeatballDay, err := dal.GetNextMeatballDay(i.GuildID, db)
+
+	var reply string
+
+	if err != nil {
+		reply = fmt.Sprintf("Failed to get next meatball day: %v", err)
+	} else if nextMeatballDay == nil {
+		reply = "There are no meatball days registered yet."
+	} else {
+		date := time.Date(
+			0,
+			time.Month(nextMeatballDay.Month),
+			int(nextMeatballDay.Day),
+			0, 0, 0, 0,
+			time.UTC,
+		)
+
+		reply = fmt.Sprintf(
+			"The next meatball day is <@%v>'s on %v.",
+			nextMeatballDay.UserID,
+			date.Format(MeatballDayResponseExample),
+		)
+	}
+
+	discordutils.SendFollowup(reply, i.Interaction, bot.session)
+}
+
 func (bot *Bot) userCanChangeMeatballDay(uid userID) (bool, *time.Time) {
 	if lastUse, ok := bot.lastSaveUsage[uid]; ok {
 		nextUse := lastUse.Add(meatballSaveCooldown)
