@@ -28,7 +28,7 @@ func CheckRoles(session *discordgo.Session, db *gorm.DB) {
 			expiredMeatballs := getExpiredMeatballs(membersWithRole, meatballDaysForUserIDs)
 			discordutils.RemoveRoleFromMembers(guild, role, expiredMeatballs, session)
 
-			meatballMembers := getTodaysMeatballMembers(guild, guild.Members, db)
+			meatballMembers := getTodaysMeatballMembers(guild, guild.Members, role, db)
 			if len(meatballMembers) > 0 {
 				discordutils.AddRoleToMembers(guild, role, meatballMembers, session)
 
@@ -133,6 +133,7 @@ func getExpiredMeatballs(
 func getTodaysMeatballMembers(
 	guild *discordgo.Guild,
 	members []*discordgo.Member,
+	role *discordgo.Role,
 	db *gorm.DB,
 ) (meatballMembers []*discordgo.Member) {
 	_, month, day := time.Now().Date()
@@ -152,7 +153,8 @@ func getTodaysMeatballMembers(
 	for _, member := range members {
 		if meatballDay, ok := memberToMeatballDay[member.User.ID]; ok {
 			if int(meatballDay.Month) == int(month) &&
-				int(meatballDay.Day) == day {
+				int(meatballDay.Day) == day &&
+				!discordutils.MemberHasRole(member, role) {
 				meatballMembers = append(meatballMembers, member)
 			}
 		}
