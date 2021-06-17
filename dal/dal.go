@@ -144,7 +144,7 @@ func findNextMeatballDay(meatballDays []models.MeatballDay) *models.MeatballDay 
 		if time.Month(meatballDay.Month) > now.Month() {
 			next = &meatballDay
 			break
-		} else if time.Month(meatballDay.Month) == now.Month() && int(meatballDay.Day) >= now.Day() {
+		} else if time.Month(meatballDay.Month) == now.Month() && int(meatballDay.Day) > now.Day() {
 			next = &meatballDay
 			break
 		}
