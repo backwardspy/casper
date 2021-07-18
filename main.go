@@ -53,7 +53,7 @@ func main() {
 
 	casper.CheckRoles()
 
-	ticker := time.NewTicker(1 * time.Hour)
+	ticker := time.NewTicker(1 * 24 * 60 * 60 * time.Second)
 	done := make(chan bool)
 	go casper.RoleChecker(ticker, done)
 
